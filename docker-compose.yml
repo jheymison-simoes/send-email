@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+
+  sendemail.api:
+    image: sendemailapi
+    container_name: api-sendemail
+    build:
+      context: .
+      dockerfile: src/SendEmail.Api/Dockerfile
+    dns:
+      - 8.8.8.8
+    ports:
+      - "5015:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - send-email
+    volumes:
+      - ~/.config/:/root/.config
+    #depends_on:
+    #  - postgres
+
+
+  #postgres:
+  #  image: postgres
+  #  container_name: postgres-send-email
+  #  restart: always
+  #  environment:
+  #    POSTGRES_USER: dev
+  #    POSTGRES_PASSWORD: sendEmail123456
+  #    POSTGRES_DB: dbsendEmail
+  #  ports:
+  #    - "15436:5432"
+  #  volumes:
+  #    - postgres-volume:/var/lib/postgresql/data 
+  #  networks:
+  #    - send-email
+
+#volumes:
+#    postgres-volume:
+#        driver: local
+
+networks: 
+  send-email:
+    driver: bridge

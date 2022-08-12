@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SendEmail.Business\SendEmail.Business.csproj" />
+      <ProjectReference Include="..\SendEmail.Data\SendEmail.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Apis.Gmail.v1" Version="1.57.0.2650" />
+      <PackageReference Include="MimeKit" Version="3.3.0" />
+    </ItemGroup>
+
+</Project>
