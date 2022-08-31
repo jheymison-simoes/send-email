@@ -59,5 +59,59 @@ namespace SendEmail.Api.Resource {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O email não pode ser vazio..
+        /// </summary>
+        internal static string LOGEMAIL_EMAIL_EMPTY {
+            get {
+                return ResourceManager.GetString("LOGEMAIL-EMAIL_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O email está inválido..
+        /// </summary>
+        internal static string LOGEMAIL_INVALID_EMAIL {
+            get {
+                return ResourceManager.GetString("LOGEMAIL-INVALID_EMAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A mensagem do email não pode ser vazia..
+        /// </summary>
+        internal static string LOGEMAIL_MESSAGE_EMPTY {
+            get {
+                return ResourceManager.GetString("LOGEMAIL-MESSAGE_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insira um email válido..
+        /// </summary>
+        internal static string SEND_EMAIL_INVALID_EMAIL {
+            get {
+                return ResourceManager.GetString("SEND-EMAIL-INVALID_EMAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A mensagem do email não pode ser vazia..
+        /// </summary>
+        internal static string SEND_EMAIL_MESSAGE_EMPTY {
+            get {
+                return ResourceManager.GetString("SEND-EMAIL-MESSAGE_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email enviado com sucesso..
+        /// </summary>
+        internal static string SEND_EMAIL_SEND_SUCCESS {
+            get {
+                return ResourceManager.GetString("SEND-EMAIL-SEND_SUCCESS", resourceCulture);
+            }
+        }
     }
 }

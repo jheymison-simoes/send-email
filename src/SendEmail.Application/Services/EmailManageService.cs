@@ -1,4 +1,6 @@
-﻿using System.Net.Mail;
+﻿using System.Globalization;
+using System.Net.Mail;
+using System.Resources;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
@@ -6,38 +8,80 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
-using SendEmail.Application.Interfaces.Services;
-using SendEmail.Application.Models;
+using SendEmail.Business.Exceptions;
+using SendEmail.Business.Interfaces.Repositories;
+using SendEmail.Business.Interfaces.Services;
+using SendEmail.Business.Models;
+using SendEmail.Business.ServiceModels;
+using SendEmail.Business.Utils;
 
 namespace SendEmail.Application.Services;
 
-public class EmailManageService : IEmailManageService
+public class EmailManageService : IEmailManagerService
 {
+    private readonly ResourceSet _resourceSet;
     private readonly IConfiguration _configuration;
+
+    #region Repositories
+    private readonly ILogEmailRepository _logEmailRepository;
+    #endregion
+    
+    #region Validators
     private readonly SendEmailModelValidator _sendEmailModelValidator;
+    private readonly LogEmailValidator _logEmailValidator;
+    #endregion
     
     public EmailManageService(
+        ResourceManager resourceManager,
+        CultureInfo cultureInfo,
         IConfiguration configuration,
-        SendEmailModelValidator sendEmailModelValidator)
+        SendEmailModelValidator sendEmailModelValidator,
+        ILogEmailRepository logEmailRepository, LogEmailValidator logEmailValidator)
     {
+        _resourceSet = resourceManager.GetResourceSet(cultureInfo, true, true);
         _configuration = configuration;
         _sendEmailModelValidator = sendEmailModelValidator;
+        _logEmailRepository = logEmailRepository;
+        _logEmailValidator = logEmailValidator;
     }
 
-    public async Task SendEmail(SendEmailModel request)
+    public async Task<string> SendEmail(SendEmailModel request)
     {
         await ValidationRequest(request);
         var serviceGmail = AuthAndGetService();
         await CreateAndSendEmail(serviceGmail, request.Email, request.Subject, request.Message);
+        await RegisterLogEmail(request);
+        return GetMessageResource("SEND-EMAIL-SEND_SUCCESS");
+    }
+
+    private async Task RegisterLogEmail(SendEmailModel request)
+    {
+        var logEmail = new LogEmail()
+        {
+            Email = request.Email,
+            Message = request.Message,
+            Subject = request.Subject
+        };
+        await ValidationRequest(logEmail);
+        _logEmailRepository.Add(logEmail);
+        await _logEmailRepository.SaveChanges();
     }
 
     #region Private Methods
     private async Task ValidationRequest(SendEmailModel request)
     {
         var requestValidator = await _sendEmailModelValidator.ValidateAsync(request);
-        if(requestValidator.IsValid) return;
+        if (requestValidator.IsValid) return;
         var errors = requestValidator.Errors.Select(x => x.ErrorMessage).ToList();
-        throw new Exception(string.Join(", ", errors));
+        throw new CustomException(string.Join(" ", errors));
+    }
+    
+    private async Task ValidationRequest(LogEmail logEmail)
+    {
+        var requestValidator = await _logEmailValidator.ValidateAsync(logEmail);
+        if (requestValidator.IsValid) return;
+        var errors = requestValidator.Errors.Select(x => x.ErrorMessage).ToList();
+        throw new CustomException(string.Join(" ", errors));
     }
     
     private GmailService AuthAndGetService()
@@ -92,6 +136,13 @@ public class EmailManageService : IEmailManageService
             .Replace('+', '-')
             .Replace('/', '_')
             .Replace("=", "");
+    }
+    
+    private string GetMessageResource(string name, params object[] parameters)
+    {
+        return parameters.Length > default(int) 
+            ? _resourceSet.GetString(name)!.ResourceFormat(parameters) 
+            : _resourceSet.GetString(name);
     }
     #endregion
 }

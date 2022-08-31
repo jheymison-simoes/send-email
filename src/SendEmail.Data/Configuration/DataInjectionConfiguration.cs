@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SendEmail.Business.Interfaces.Repositories;
+using SendEmail.Data.Repositories;
 
 namespace SendEmail.Data.Configuration;
 
@@ -13,7 +15,7 @@ public static class DataInjectionConfiguration
 
     private static IServiceCollection InjectionDependencyRepository(IServiceCollection services)
     {
-        
+        services.AddScoped<ILogEmailRepository, LogEmailRepository>();
         return services;
     }
     

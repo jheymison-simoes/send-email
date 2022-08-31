@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+﻿using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SendEmail.Data;
 
@@ -40,6 +40,19 @@ public static class ApiConfig
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader());
+        });
+        
+        services.AddApiVersioning(p =>
+        {
+            p.DefaultApiVersion = new ApiVersion(1, 0);
+            p.ReportApiVersions = true;
+            p.AssumeDefaultVersionWhenUnspecified = true;
+        });
+
+        services.AddVersionedApiExplorer(p =>
+        {
+            p.GroupNameFormat = "'v'VVV";
+            p.SubstituteApiVersionInUrl = true;
         });
     }
     

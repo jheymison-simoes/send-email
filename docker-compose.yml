@@ -19,28 +19,28 @@ services:
       - send-email
     volumes:
       - ~/.config/:/root/.config
-    #depends_on:
-    #  - postgres
+    depends_on:
+      - postgres
 
 
-  #postgres:
-  #  image: postgres
-  #  container_name: postgres-send-email
-  #  restart: always
-  #  environment:
-  #    POSTGRES_USER: dev
-  #    POSTGRES_PASSWORD: sendEmail123456
-  #    POSTGRES_DB: dbsendEmail
-  #  ports:
-  #    - "15436:5432"
-  #  volumes:
-  #    - postgres-volume:/var/lib/postgresql/data 
-  #  networks:
-  #    - send-email
+  postgres:
+    image: postgres
+    container_name: postgres-send-email
+    restart: always
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: sendEmail123456
+      POSTGRES_DB: dbsendEmail
+    ports:
+      - "15436:5432"
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data 
+    networks:
+      - send-email
 
-#volumes:
-#    postgres-volume:
-#        driver: local
+volumes:
+    postgres-volume:
+        driver: local
 
 networks: 
   send-email:

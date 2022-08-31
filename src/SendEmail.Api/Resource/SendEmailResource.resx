@@ -18,4 +18,22 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="SEND-EMAIL-INVALID_EMAIL" xml:space="preserve">
+        <value>Insira um email válido.</value>
+    </data>
+    <data name="SEND-EMAIL-MESSAGE_EMPTY" xml:space="preserve">
+        <value>A mensagem do email não pode ser vazia.</value>
+    </data>
+    <data name="SEND-EMAIL-SEND_SUCCESS" xml:space="preserve">
+        <value>Email enviado com sucesso.</value>
+    </data>
+    <data name="LOGEMAIL-EMAIL_EMPTY" xml:space="preserve">
+        <value>O email não pode ser vazio.</value>
+    </data>
+    <data name="LOGEMAIL-INVALID_EMAIL" xml:space="preserve">
+        <value>O email está inválido.</value>
+    </data>
+    <data name="LOGEMAIL-MESSAGE_EMPTY" xml:space="preserve">
+        <value>A mensagem do email não pode ser vazia.</value>
+    </data>
 </root>

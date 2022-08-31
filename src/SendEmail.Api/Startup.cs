@@ -15,6 +15,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddApiConfiguration(Configuration);
+        services.AddResourceConfiguration();
         services.DependencyInjection(Configuration);
         services.AddSwaggerConfiguration();
         services.Configure<CredentialsGmailApi>(Configuration.GetSection("GmailApiCredentials"));

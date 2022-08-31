@@ -1,41 +1,43 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SendEmail.Api.ViewModels;
-using SendEmail.Application.Interfaces.Services;
-using SendEmail.Application.Models;
+using SendEmail.Business.Exceptions;
+using SendEmail.Business.Interfaces.Services;
+using SendEmail.Business.ServiceModels;
 
 namespace SendEmail.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class SendEmailController : ControllerBase
+[ApiVersion("1")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class SendEmailController : BaseController<SendEmailController>
 {
-    private readonly ILogger<SendEmailController> _logger;
-    private readonly IMapper _mapper;
-    private readonly IEmailManageService _emailManageService;
+    private readonly IEmailManagerService _emailManageService;
 
     public SendEmailController(
         ILogger<SendEmailController> logger,
         IMapper mapper,
-        IEmailManageService emailManageService)
+        IEmailManagerService emailManageService) : base(logger, mapper)
     {
-        _logger = logger;
         _emailManageService = emailManageService;
-        _mapper = mapper;
     }
     
-    [HttpPost("SendEmail")]
-    public async Task<IActionResult> SendEmail(SendEmailViewModel req)
+    [HttpPost("Send")]
+    public async Task<ActionResult<BaseResponse<string>>> SendEmail(SendEmailViewModel req)
     {
         try
         {
-            var request = _mapper.Map<SendEmailModel>(req);
-            await _emailManageService.SendEmail(request);
-            return Ok("Email successfully sent!");
+            var request = Mapper.Map<SendEmailModel>(req);
+            var result = await _emailManageService.SendEmail(request);
+            return BaseResponseSuccess(result);
+        }
+        catch (CustomException cEx)
+        {
+            return BaseResponseError(cEx.Message);
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return BaseResponseInternalError(ex.Message);
         }
     }
 }

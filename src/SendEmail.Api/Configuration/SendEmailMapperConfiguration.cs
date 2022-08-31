@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SendEmail.Api.ViewModels;
-using SendEmail.Application.Models;
+using SendEmail.Business.ServiceModels;
 
 namespace SendEmail.Api.Configuration;
 
